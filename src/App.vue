@@ -1,20 +1,20 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <TableComp></TableComp>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TableComp from './components/TableComp.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TableComp
   }
 }
 </script>
 
 <style lang="scss">
+@import "bootstrap/scss/bootstrap";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
