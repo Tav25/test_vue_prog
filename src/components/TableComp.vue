@@ -31,21 +31,44 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="dataCell in dataTab" :key="dataCell.id">
+          <tr v-for="(dataCell, index) in dataTab" :key="dataCell.id" >
             <td>{{dataCell.id}}</td>
-            <td>{{dataCell.date}}</td>
-            <td>{{dataCell.name}}</td>
-            <td>{{dataCell.quantity}}</td>
-            <td>{{dataCell.distance}}</td>
+            <td>{{ dataCell.date }}_{{ index }}</td>
+            <td>{{ dataCell.name }}</td>
+            <td>{{ dataCell.quantity }}</td>
+            <td>{{ dataCell.distance }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <nav>
+          <ul class="pagination pagination-sm">
+            <li class="page-item">
+              <a class="page-link" aria-label="Previous" href="#"
+                ><span aria-hidden="true">«</span></a
+              >
+            </li>
+            <li class="page-item"  v-for="(pagNum, index) in lengthDataTab" :class="{ 'fw-bold' : currentPage === index + 1 }" :key="pagNum">
+              <a class="page-link" href="#">{{ pagNum }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" aria-label="Next" href="#"
+                ><span aria-hidden="true">»</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
   </div>
   <ul>
-      <li v-for="g in info" :key="g">>>{{ g }}</li>
-    </ul>
+    <li v-for="g in info" :key="g">>>{{ g }}</li>
+  </ul>
+  {{ lengthDataTab }} ct {{countTab}}
 </template>
 
 <script>
@@ -58,27 +81,46 @@ export default {
 
   data () {
     return {
-      dataTab: {}
+      dataTab: {},
+      currentPage: 1,
+      countRow: 50,
+      rowNumber: 1,
+      countTab: 0
     }
   },
+
+  computed: {
+    lengthDataTab () {
+      return Object.keys(this.dataTab).length / this.countRow
+    }
+
+    // rowNumberUpdate () {
+    //   return this.rowNumber + 1
+    // }
+  },
+
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    }
+  },
+
   mounted () {
     const self = this
     axios
-      .get('http://192.168.100.62:3000/api/data/')
+      .get('http://192.168.100.62:3000/api/data50')
       .then(function (response) {
-        // handle success
         self.dataTab = response.data
-        console.log(response)
       })
-      .catch(function (error) {
-        // handle error
-        console.log(error)
-      })
-      .finally(function () {
-        // always executed
+
+    axios
+      .get('http://192.168.100.62:3000/api/count')
+      .then(function (response) {
+        self.countTab = response.data[0]['count(*)']
       })
   }
-
 }
 </script>
 
