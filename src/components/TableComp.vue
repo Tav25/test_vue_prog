@@ -6,7 +6,7 @@
       class="btn btn-danger"
       @click="
         test = test + 1;
-        gh();
+
       "
     >
       Update</button
@@ -68,7 +68,7 @@
               :key="pagNum"
               @click="
                 paramsAxios.currentPage = index + 1;
-                gh();
+
               "
             >
               <a class="page-link" href="#">{{ pagNum }}</a>
@@ -88,7 +88,7 @@
       @click="
         paramsAxios.limitRow = 10;
         paramsAxios.currentPage = 1;
-        gh();
+
       "
     >
       10
@@ -98,7 +98,7 @@
       @click="
         paramsAxios.limitRow = 25;
         paramsAxios.currentPage = 1;
-        gh();
+
       "
     >
       25
@@ -108,7 +108,7 @@
       @click="
         paramsAxios.limitRow = 50;
         paramsAxios.currentPage = 1;
-        gh();
+
       "
     >
       50
@@ -164,6 +164,19 @@ export default {
           self.dataTab = response.data.result
           self.totalPaginationPages = response.data.count
         })
+    }
+  },
+
+  watch: {
+    test (val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`)
+    },
+    paramsAxios: {
+      handler () {
+        this.gh()
+        console.log('new:')
+      },
+      deep: true
     }
   },
 
