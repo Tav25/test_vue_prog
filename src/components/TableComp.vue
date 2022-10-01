@@ -10,24 +10,24 @@
       "
     >
       Update</button
-    >{{ test }}
+    >{{ test }}-{{paramsAxios.sort}}
     <div>
-      <select>
-        <optgroup label="select column">
+      <select v-model="paramsAxios.sort">
+        <optgroup label="select column" >
           <option value="12" selected>-</option>
-          <option value="12">Name</option>
-          <option value="13">Current</option>
-          <option value="14">Distance</option>
+          <option value="name">Name</option>
+          <option value="quantity">Current</option>
+          <option value="distance">Distance</option>
         </optgroup>
       </select>
-      <select>
+      <select v-model="paramsAxios.type" >
         <optgroup label="select filter param">
-          <option value="12" selected>=</option>
-          <option value="13">&lt;</option>
-          <option value="14">&gt;</option>
+          <option value="equals">=</option>
+          <option value="less">&lt;</option>
+          <option value="more">&gt;</option>
         </optgroup>
       </select>
-      <input type="text" />
+      <input type="text" v-model="paramsAxios.data" />
     </div>
     <div class="table-responsive">
       <table class="table table-striped table-sm table-bordered">
@@ -52,7 +52,7 @@
       </table>
     </div>
     <div class="row">
-      <div class="col-md-4"></div>
+
       <div class="col-md-4">
         <nav>
           <ul class="pagination pagination-sm">
@@ -81,7 +81,7 @@
           </ul>
         </nav>
       </div>
-      <div class="col-md-4"></div>
+
     </div>
     <button
       class="btn btn-danger"
@@ -137,7 +137,7 @@ export default {
       paramsAxios: {
         sort: '',
         data: '',
-        type: '',
+        type: '=',
         limitRow: 25,
         currentPage: 1
       }
