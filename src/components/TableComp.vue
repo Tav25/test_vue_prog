@@ -1,6 +1,16 @@
 <template>
   <div class="hello">
     <h3>TableComp</h3>
+
+    <button
+      class="btn btn-danger"
+      @click="
+        test = test + 1;
+        gh();
+      "
+    >
+      Update</button
+    >{{ test }}
     <div>
       <select>
         <optgroup label="select column">
@@ -31,8 +41,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(dataCell, index) in dataTab" :key="dataCell.id" >
-            <td>{{dataCell.id}}</td>
+          <tr v-for="(dataCell, index) in dataTab" :key="dataCell.id">
+            <td>{{ dataCell.id }}</td>
             <td>{{ dataCell.date }}_{{ index }}</td>
             <td>{{ dataCell.name }}</td>
             <td>{{ dataCell.quantity }}</td>
@@ -51,7 +61,12 @@
                 ><span aria-hidden="true">«</span></a
               >
             </li>
-            <li class="page-item"  v-for="(pagNum, index) in lengthDataTab" :class="{ 'fw-bold' : currentPage === index + 1 }" :key="pagNum">
+            <li
+              class="page-item"
+              v-for="(pagNum, index) in lengthDataTab"
+              :class="{ 'fw-bold': paramsAxios.currentPage === index + 1 }"
+              :key="pagNum"
+            >
               <a class="page-link" href="#">{{ pagNum }}</a>
             </li>
             <li class="page-item">
@@ -65,10 +80,10 @@
       <div class="col-md-4"></div>
     </div>
   </div>
-  <ul>
+  <!-- <ul>
     <li v-for="g in info" :key="g">>>{{ g }}</li>
-  </ul>
-  {{ lengthDataTab }} ct {{countTab}}
+  </ul> -->
+  <!-- {{dataTab}}d -->
 </template>
 
 <script>
@@ -81,44 +96,60 @@ export default {
 
   data () {
     return {
+      test: 1,
       dataTab: {},
-      currentPage: 1,
       countRow: 50,
-      rowNumber: 1,
-      countTab: 0
+      totalPaginationPages: '',
+      paramsAxios: {
+        sort: '',
+        data: '',
+        type: '',
+        limitRow: 50,
+        currentPage: 1
+      }
+    }
+  },
+
+  methods: {
+    gh () {
+      console.log('>>>>')
+      // console.log(this.paramsAxios)
+      this.paramsAxios.currentPage = 1
+      this.paramsAxios.sort = 'id'
+      this.paramsAxios.data = '55'
+      this.paramsAxios.type = 'less'
+
+      // console.log(this.paramsAxios)
+      ///
+      const self = this
+      axios
+        .get('http://192.168.100.62:3000/api/d', {
+          params: self.paramsAxios
+        })
+        .then(function (response) {
+          self.dataTab = response.data.result
+          self.totalPaginationPages = response.data.count
+        })
     }
   },
 
   computed: {
     lengthDataTab () {
-      return Object.keys(this.dataTab).length / this.countRow
+      return Math.ceil(this.totalPaginationPages / this.paramsAxios.limitRow)
+      // return this.totalPaginationPages / this.paramsAxios.limitRow
     }
 
-    // rowNumberUpdate () {
-    //   return this.rowNumber + 1
-    // }
-  },
-
-  filters: {
-    capitalize: function (value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    }
   },
 
   mounted () {
     const self = this
     axios
-      .get('http://192.168.100.62:3000/api/data50')
-      .then(function (response) {
-        self.dataTab = response.data
+      .get('http://192.168.100.62:3000/api/d', {
+        params: self.paramsAxios
       })
-
-    axios
-      .get('http://192.168.100.62:3000/api/count')
       .then(function (response) {
-        self.countTab = response.data[0]['count(*)']
+        self.dataTab = response.data.result
+        self.totalPaginationPages = response.data.count
       })
   }
 }
