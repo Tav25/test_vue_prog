@@ -2,15 +2,6 @@
   <div class="hello">
     <h3>TableComp</h3>
 
-    <button
-      class="btn btn-danger"
-      @click="
-        test = test + 1;
-
-      "
-    >
-      Update</button
-    >{{ test }}-{{paramsAxios.sort}}
     <div>
       <select v-model="paramsAxios.sort">
         <optgroup label="select column" >
@@ -28,6 +19,15 @@
         </optgroup>
       </select>
       <input type="text" v-model="paramsAxios.data" />
+      <button
+      class="btn btn-primary btn-sm"
+      @click="
+        test = test + 1;
+        gh();
+      "
+    >
+      filter</button
+    >
     </div>
     <div class="table-responsive">
       <table class="table table-striped table-sm table-bordered">
@@ -66,11 +66,7 @@
               v-for="(pagNum, index) in lengthDataTab"
               :class="{ 'fw-bold': paramsAxios.currentPage === index + 1 }"
               :key="pagNum"
-              @click="
-                paramsAxios.currentPage = index + 1;
-
-              "
-            >
+              @click="paramsAxios.currentPage = index + 1 ; gh()">
               <a class="page-link" href="#">{{ pagNum }}</a>
             </li>
             <li class="page-item">
@@ -88,7 +84,7 @@
       @click="
         paramsAxios.limitRow = 10;
         paramsAxios.currentPage = 1;
-
+        this.gh();
       "
     >
       10
@@ -98,7 +94,7 @@
       @click="
         paramsAxios.limitRow = 25;
         paramsAxios.currentPage = 1;
-
+        this.gh();
       "
     >
       25
@@ -108,7 +104,7 @@
       @click="
         paramsAxios.limitRow = 50;
         paramsAxios.currentPage = 1;
-
+        this.gh();
       "
     >
       50
@@ -170,14 +166,11 @@ export default {
   watch: {
     test (val, oldVal) {
       console.log(`new: ${val}, old: ${oldVal}`)
-    },
-    paramsAxios: {
-      handler () {
-        this.gh()
-        console.log('new:')
-      },
-      deep: true
     }
+    // paramsAxios["limitRow"]: {
+    //     this.gh();
+    //     console.log('new:')
+    // }
   },
 
   computed: {
