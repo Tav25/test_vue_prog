@@ -110,25 +110,17 @@
       50
     </button>
   </div>
-  <!-- <ul>
-    <li v-for="g in info" :key="g">>>{{ g }}</li>
-  </ul> -->
-  <!-- {{dataTab}}d -->
 </template>
 
 <script>
 const axios = require('axios').default
 export default {
   name: 'TableComp',
-  props: {
-    msg: String
-  },
 
   data () {
     return {
       test: 1,
       dataTab: {},
-      countRow: 50,
       totalPaginationPages: '',
       paramsAxios: {
         sort: '',
@@ -142,15 +134,6 @@ export default {
 
   methods: {
     gh () {
-      console.log('>>>>')
-      console.log(this.paramsAxios)
-      // this.paramsAxios.currentPage = 1
-      // this.paramsAxios.sort = 'id'
-      // this.paramsAxios.data = '55'
-      // this.paramsAxios.type = 'less'
-
-      // console.log(this.paramsAxios)
-      ///
       const self = this
       axios
         .get('http://localhost:3000/api/d', {
@@ -163,20 +146,9 @@ export default {
     }
   },
 
-  watch: {
-    test (val, oldVal) {
-      console.log(`new: ${val}, old: ${oldVal}`)
-    }
-    // paramsAxios["limitRow"]: {
-    //     this.gh();
-    //     console.log('new:')
-    // }
-  },
-
   computed: {
     lengthDataTab () {
       return Math.ceil(this.totalPaginationPages / this.paramsAxios.limitRow)
-      // return this.totalPaginationPages / this.paramsAxios.limitRow
     }
   },
 
