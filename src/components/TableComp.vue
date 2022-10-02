@@ -22,7 +22,7 @@
       <button
       class="btn btn-primary btn-sm"
       @click="
-        test = test + 1;
+        paramsAxios.currentPage = 1;
         gh();
       "
     >
@@ -153,7 +153,7 @@ export default {
       ///
       const self = this
       axios
-        .get('http://192.168.100.62:3000/api/d', {
+        .get('http://localhost:3000/api/d', {
           params: self.paramsAxios
         })
         .then(function (response) {
@@ -181,15 +181,7 @@ export default {
   },
 
   mounted () {
-    const self = this
-    axios
-      .get('http://192.168.100.62:3000/api/d', {
-        params: self.paramsAxios
-      })
-      .then(function (response) {
-        self.dataTab = response.data.result
-        self.totalPaginationPages = response.data.count
-      })
+    this.gh()
   }
 }
 </script>
