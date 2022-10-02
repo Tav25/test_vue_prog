@@ -1,11 +1,11 @@
 <template>
-  <div class="hello">
-    <h3>TableComp</h3>
-
-    <div>
+  <div class="container">
+  <h3>TableComp</h3>
+  <div class="col-xl-8 col-xxl-8 mx-auto">
+<div class="row filters" >
+    <div class="col">
       <select v-model="paramsAxios.sort">
         <optgroup label="select column" >
-          <option value="12" selected>-</option>
           <option value="name">Name</option>
           <option value="quantity">Current</option>
           <option value="distance">Distance</option>
@@ -18,22 +18,39 @@
           <option value="more">&gt;</option>
         </optgroup>
       </select>
-      <input type="text" v-model="paramsAxios.data" />
+      <input type="text" v-model="paramsAxios.data"
+      @keypress.enter="
+        paramsAxios.currentPage = 1;
+        main();"
+      />
       <button
       class="btn btn-primary btn-sm"
       @click="
         paramsAxios.currentPage = 1;
-        gh();
+        main();
       "
     >
       filter</button
     >
+    <button
+      class="btn btn-danger btn-sm"
+      @click="
+        paramsAxios.currentPage = 1;
+        paramsAxios.sort= '';
+        paramsAxios.data= '';
+        paramsAxios.type= '';
+        main();
+      "
+    >
+      reset</button
+    >
     </div>
+  </div>
     <div class="table-responsive">
       <table class="table table-striped table-sm table-bordered">
         <thead class="text-center">
           <tr>
-            <th>#</th>
+            <!-- <th>#</th> -->
             <th>Date</th>
             <th>Name</th>
             <th>Curent</th>
@@ -41,9 +58,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(dataCell, index) in dataTab" :key="dataCell.id">
-            <td>{{ dataCell.id }}</td>
-            <td>{{ dataCell.date }}_{{ index }}</td>
+          <tr v-for="dataCell in dataTab" :key="dataCell.id">
+            <!-- <td>{{ dataCell.id }}</td> -->
+            <td>{{ dataCell.date }}</td>
             <td>{{ dataCell.name }}</td>
             <td>{{ dataCell.quantity }}</td>
             <td>{{ dataCell.distance }}</td>
@@ -53,11 +70,11 @@
     </div>
     <div class="row">
 
-      <div class="col-md-4">
-        <nav>
+      <div class="col">
+        <nav class="d-xl-flex justify-content-xl-center">
           <ul class="pagination pagination-sm">
             <li class="page-item">
-              <a class="page-link" aria-label="Previous" href="#"
+              <a class="page-link" aria-label="Previous" href="#" @click="if (paramsAxios.currentPage > 1) {paramsAxios.currentPage--; main()} ;"
                 ><span aria-hidden="true">«</span></a
               >
             </li>
@@ -66,11 +83,11 @@
               v-for="(pagNum, index) in lengthDataTab"
               :class="{ 'fw-bold': paramsAxios.currentPage === index + 1 }"
               :key="pagNum"
-              @click="paramsAxios.currentPage = index + 1 ; gh()">
+              @click="paramsAxios.currentPage = index + 1 ; main()">
               <a class="page-link" href="#">{{ pagNum }}</a>
             </li>
             <li class="page-item">
-              <a class="page-link" aria-label="Next" href="#"
+              <a class="page-link" aria-label="Next" href="#" @click="if (paramsAxios.currentPage < lengthDataTab) {paramsAxios.currentPage++; main()} ;"
                 ><span aria-hidden="true">»</span></a
               >
             </li>
@@ -79,37 +96,41 @@
       </div>
 
     </div>
-    <button
-      class="btn btn-danger"
-      @click="
+    <div class="row">
+      <div class="col">
+        <nav class="d-xl-flex justify-content-xl-center">
+          <ul class="pagination pagination-sm">
+            <li class="page-item" @click="
         paramsAxios.limitRow = 10;
         paramsAxios.currentPage = 1;
-        this.gh();
-      "
-    >
-      10
-    </button>
-    <button
-      class="btn btn-danger"
-      @click="
+        this.main();"
+        :class="{ 'fw-bold': paramsAxios.limitRow === 10 }">
+              <a class="page-link" href="#"><span aria-hidden="true">10</span></a
+              >
+            </li>
+            <li class="page-item" @click="
         paramsAxios.limitRow = 25;
         paramsAxios.currentPage = 1;
-        this.gh();
-      "
-    >
-      25
-    </button>
-    <button
-      class="btn btn-danger"
-      @click="
+        this.main();"
+        :class="{ 'fw-bold': paramsAxios.limitRow === 25 }">
+              <a class="page-link" href="#"><span aria-hidden="true">25</span></a
+              >
+            </li>
+            <li class="page-item" @click="
         paramsAxios.limitRow = 50;
         paramsAxios.currentPage = 1;
-        this.gh();
-      "
-    >
-      50
-    </button>
+        this.main();"
+        :class="{ 'fw-bold': paramsAxios.limitRow === 50 }">
+              <a class="page-link" href="#"><span aria-hidden="true">50</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
   </div>
+</div>
 </template>
 
 <script>
@@ -119,7 +140,8 @@ export default {
 
   data () {
     return {
-      test: 1,
+      // url: 'http://localhost:3000',
+      url: 'https://sheltered-eyrie-29185.herokuapp.com',
       dataTab: {},
       totalPaginationPages: '',
       paramsAxios: {
@@ -133,10 +155,10 @@ export default {
   },
 
   methods: {
-    gh () {
+    main () {
       const self = this
       axios
-        .get('http://localhost:3000/api/d', {
+        .get(`${this.url}/data`, {
           params: self.paramsAxios
         })
         .then(function (response) {
@@ -153,14 +175,20 @@ export default {
   },
 
   mounted () {
-    this.gh()
+    this.main()
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-input {
-  height: 22px;
+input, select, button {
+  height: 30px;
+  margin-right: 10px;
 }
+
+.filters{
+  margin-bottom: 20px;
+}
+
 </style>
